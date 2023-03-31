@@ -62,5 +62,31 @@ app.use(
   )
 );
 
+app.use(
+  "/auth",
+  router.post("/login"),
+  [body("name"), body("password")],
+  async (request, response) => {
+    try {
+      let user = await User.findOne({
+        email: request.body.email,
+        password: request.body.password,
+      });
+
+      if (user) {
+        return response
+          .status(200)
+          .json({ message: user.name, successfulLogin: true });
+      } else {
+        return response
+          .status(401)
+          .json({ message: "Invalid Login", successfulLogin: false });
+      }
+    } catch (error) {
+      console.log("Something went wrong", error);
+    }
+  }
+);
+
 // no requirement now to insert data from backend
 DefaultData();
