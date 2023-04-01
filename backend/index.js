@@ -2,15 +2,16 @@
 import connectTOMongo from "./db.js";
 import express from "express";
 import DefaultData from "./default.js";
-const router = express.Router();
 import { body } from "express-validator";
 import User from "./models/User.js";
 import cors from "cors";
+import { signupUser, userDetails, loginUser } from "./controller/user-controller.js";
 
 connectTOMongo();
 
 const app = express();
 const port = 5000;
+const router = express.Router();
 
 app.use(express.json());
 app.use(cors());
@@ -22,71 +23,18 @@ app.listen(port, () => {
   console.log("Successfully running on", port);
 });
 
-// router.post (/createuser) acts as route for auth
-app.use(
-  "/signup",
-  router.post(
-    "/createuser",
-    [
-      body("name", "Enter a valid Name."),
-      body("email", "Enter a valid Email."),
-      body("password", "Enter a valid Password of at least 5 characters."),
-      body("confirmpassword"),
-    ],
-    async (req, res) => {
-      try {
-        let user = await User.findOne({ email: req.body.email });
+// router.post (/createuser) acts as route for signup
 
-        if (user) {
-          console.log("Already exists");
-          return res.status(400).json({
-            error: "Sorry a user with this email address exists already..",
-          });
-        }
+app.use("/signup", router.post("/createuser"), signupUser);
 
-        user = await User.create({
-          name: req.body.name,
-          email: req.body.email,
-          password: req.body.password,
-          confirmpassword: req.body.confirmpassword,
-        });
+app.use("/auth", router.post("/login"), loginUser);
 
-        console.log("User created successfully...");
-        // console.log(user);
-        // console.log(user.email);
-        res.status(200).json("Success");
-      } catch (error) {
-        console.log("Something went wrong", error);
-      }
-    }
-  )
-);
+app.use("/saveuser", router.post("/details", userDetails));
 
-app.use(
-  "/auth",
-  router.post("/login"),
-  [body("name"), body("password")],
-  async (request, response) => {
-    try {
-      let user = await User.findOne({
-        email: request.body.email,
-        password: request.body.password,
-      });
 
-      if (user) {
-        return response
-          .status(200)
-          .json({ message: user.name, successfulLogin: true });
-      } else {
-        return response
-          .status(401)
-          .json({ message: "Invalid Login", successfulLogin: false });
-      }
-    } catch (error) {
-      console.log("Something went wrong", error);
-    }
-  }
-);
+
+
+
 
 // no requirement now to insert data from backend
-DefaultData();
+// DefaultData();

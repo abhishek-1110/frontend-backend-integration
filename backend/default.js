@@ -1,16 +1,14 @@
-import { products } from "./constants/data.js";
-import Product from "./models/product-schema.js";
-
-import { users } from "./constants/userdata.js";
-import User from "./models/User.js";
+import Details from "./models/Details.js";
 
 const DefaultData = async () => {
   try {
     // to insert data to server from backend directly
-    await Product.deleteMany({});
-    await Product.insertMany(products);
-
-    // await User.insertMany(users);
+    Details.insertMany({
+      name: "Abhishek",
+      phone: "8219239384",
+      email: "abhishkbhi@gmail.com",
+      bloodgroup: "O+"
+    })
 
     console.log("Data imported successfully......");
   } catch (error) {

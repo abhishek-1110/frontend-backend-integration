@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DisplayItems from "./DisplayItems";
+import { saveUserDetails } from "../api/api";
 
 const Home = () => {
   let navigate = useNavigate();
@@ -9,9 +11,34 @@ const Home = () => {
     }
   });
 
+  const [userdata, setuserdata] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    bloodgroup: ""
+  });
+
+
+  const onChange = (e) => {
+    setuserdata({ ...userdata, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    console.log("Front end ", userdata);
+
+    console.log(userdata);
+    try {
+      saveUserDetails(userdata);
+    } catch(error) {
+      console.log("Front error", error);
+    }
+  };
+
   return (
     <div style={{ width: 500, margin: "auto" }}>
-      <form>
+      <form method = "POST" onSubmit={handleSubmit}>
         <div class="mb-3">
           <label for="exampleFormControlInput1" class="form-label mt-3">
             Name
@@ -21,7 +48,7 @@ const Home = () => {
             class="form-control"
             id="exampleFormControlInput1"
             placeholder="Your Name"
-            value={localStorage.getItem('user')}
+            onChange={onChange}
             name="name"
           />
 
@@ -34,6 +61,7 @@ const Home = () => {
             id="exampleFormControlInput1"
             placeholder="Phone number"
             name="phone"
+            onChange={onChange}
           />
 
           <label for="exampleFormControlInput1" class="form-label mt-3">
@@ -45,6 +73,7 @@ const Home = () => {
             id="exampleFormControlInput1"
             placeholder="name@example.com"
             name="email"
+            onChange={onChange}
           />
 
           <label for="exampleFormControlInput1" class="form-label mt-3">
@@ -56,6 +85,7 @@ const Home = () => {
             id="exampleFormControlInput1"
             placeholder="Blood Group"
             name="bloodgroup"
+            onChange={onChange}
           />
 
           <div class="col-auto mt-3">
@@ -66,8 +96,7 @@ const Home = () => {
         </div>
       </form>
 
-
-      
+      <DisplayItems></DisplayItems>
     </div>
   );
 };

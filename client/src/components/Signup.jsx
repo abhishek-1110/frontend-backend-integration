@@ -12,7 +12,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password, confirmpassword } = credentials;
-
+    console.log(name);
     if (
       credentials.password.length === 0 ||
       credentials.confirmpassword.length === 0

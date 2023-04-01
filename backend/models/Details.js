@@ -1,11 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
 const userDetailsSchema = new Schema ({
-    name: String,
-    phone: String,
-    email: String,
-    bloodgroup: String,
+    name: {
+        type: String
+    },
+    phone: { type: String},
+    email: {type: String},
+    bloodgroup: {type: String},
 })
 
-const details = mongoose.model('userDetail', userDetailsSchema);
-export default details;
+const Details = mongoose.model('userDetail', userDetailsSchema);
+export default Details;
