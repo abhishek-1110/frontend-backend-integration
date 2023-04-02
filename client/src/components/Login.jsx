@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -24,10 +24,10 @@ const Login = () => {
       });
 
       const json = await response.json();
-      console.log({ message: json.message, login: json.successfulLogin });
+      // console.log({ message: json.message, login: json.successfulLogin });
       if (json.successfulLogin) {
         // open info page
-        localStorage.setItem("user", json.message);
+        localStorage.setItem("authToken", json.authToken);
         navigate("/");
       } else {
         console.log("Not valid credentials");
@@ -38,8 +38,16 @@ const Login = () => {
   };
 
   const onChange = (e) => {
-    setcredentials({ ...credentials, [e.target.name]: [e.target.value] });
+    setcredentials({ ...credentials, [e.target.name]: e.target.value});
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      navigate("/");
+      return;
+    }
+  }, [])
+  
   return (
     <div>
       <section className="vh-100" style={{ backgroundColor: "#eee" }}>

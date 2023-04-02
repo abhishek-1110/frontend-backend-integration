@@ -1,11 +1,9 @@
 // import DefaultData from "./default";
 import connectTOMongo from "./db.js";
 import express from "express";
-import DefaultData from "./default.js";
-import { body } from "express-validator";
-import User from "./models/User.js";
 import cors from "cors";
-import { signupUser, userDetails, loginUser } from "./controller/user-controller.js";
+import { signupUser, userDetails, loginUser, getUserDetails } from "./controller/user-controller.js";
+import { fetchuser } from "./middleware/fetchUser.js";
 
 connectTOMongo();
 
@@ -29,9 +27,9 @@ app.use("/signup", router.post("/createuser"), signupUser);
 
 app.use("/auth", router.post("/login"), loginUser);
 
-app.use("/saveuser", router.post("/details", userDetails));
+app.use("/saveuser", router.post("/details", fetchuser, userDetails));
 
-
+app.use("/getuser", router.get("/details", fetchuser, getUserDetails));
 
 
 

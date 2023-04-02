@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [credentials, setcredentials] = useState({
     name: "",
     email: "",
@@ -12,7 +13,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password, confirmpassword } = credentials;
-    console.log(name);
+
     if (
       credentials.password.length === 0 ||
       credentials.confirmpassword.length === 0
@@ -26,28 +27,44 @@ const Signup = () => {
 
     // here need to write code on submission to send data to mongodb
 
-    const response = await fetch("http://localhost:5000/signup/createuser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        confirmpassword,
-      }),
-    });
+    try {
+      const response = await fetch("http://localhost:5000/signup/createuser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          confirmpassword,
+        }),
+      });
+  
+      const json = await response.json();
+      console.log(json);
+  
+      localStorage.setItem('authToken', json.authToken);
+      localStorage.setItem('username',  json.username);
+      navigate("/");
+      // console.log("User has been saved");
 
-    const json = await response.json();
-    console.log(json);
-    console.log("User has been saved");
+    } catch(error) {
+      console.log("Some error", error);
+    }
   };
 
   const onChange = (e) => {
     // console.log(e.target.value);
     setcredentials({ ...credentials, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      navigate("/");
+      return;
+    }
+  }, [])
 
   return (
     <div>

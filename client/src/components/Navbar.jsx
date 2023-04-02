@@ -1,23 +1,23 @@
 import React from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
   let location = useLocation();
-
+  let navigate = useNavigate();
   React.useEffect(() => {}, [location]);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    Navigate("/login");
+    localStorage.removeItem('authToken');
+    navigate("/login");
   }
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
+          <Link className="navbar-brand" to="/">
             Backend
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -38,7 +38,7 @@ const Navbar = () => {
               </li>
             </ul>
             <form className="d-flex" role="search">
-              {!localStorage.getItem("user") ? (
+              {!localStorage.getItem("authToken") ? (
                 <>
                   <Link
                     type="button"
