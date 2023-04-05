@@ -8,9 +8,10 @@ const Login = () => {
     password: "",
   });
 
+  const [loading, setloading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setloading(true);
     try {
       const response = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
@@ -28,10 +29,12 @@ const Login = () => {
       if (json.successfulLogin) {
         // open info page
         localStorage.setItem("authToken", json.authToken);
+        setloading(false);
         navigate("/");
       } else {
         console.log("Not valid credentials");
       }
+      setloading(false);
     } catch (error) {
       console.log("Some error occured..", error);
     }
@@ -103,7 +106,7 @@ const Login = () => {
                             className="btn btn-primary btn-lg"
                             style={{ width: "150px" }}
                           >
-                            Login
+                            {loading  ? "Loading..." : "Login"}
                           </button>
                         </div>
                       </form>

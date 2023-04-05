@@ -9,9 +9,11 @@ const Signup = () => {
     password: "",
     confirmpassword: "",
   });
+  const [loading, setloading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setloading(true);
     const { name, email, password, confirmpassword } = credentials;
 
     if (
@@ -19,9 +21,11 @@ const Signup = () => {
       credentials.confirmpassword.length === 0
     ) {
       alert("Password can't be empty.");
+      setloading(false);
       return;
     } else if (credentials.password !== credentials.confirmpassword) {
       alert("Password not matching.");
+      setloading(false);
       return;
     }
 
@@ -40,18 +44,19 @@ const Signup = () => {
           confirmpassword,
         }),
       });
-  
+
       const json = await response.json();
       console.log(json);
-  
-      localStorage.setItem('authToken', json.authToken);
-      localStorage.setItem('username',  json.username);
+
+      localStorage.setItem("authToken", json.authToken);
+      localStorage.setItem("username", json.username);
+      setloading(false);
       navigate("/");
       // console.log("User has been saved");
-
-    } catch(error) {
+    } catch (error) {
       console.log("Some error", error);
     }
+    setloading(false);
   };
 
   const onChange = (e) => {
@@ -64,7 +69,7 @@ const Signup = () => {
       navigate("/");
       return;
     }
-  }, [])
+  }, []);
 
   return (
     <div>
@@ -146,7 +151,7 @@ const Signup = () => {
                             className="btn btn-primary btn-lg"
                             style={{ width: "150px" }}
                           >
-                            Register
+                            {loading ? "Loading..." : "Register"}
                           </button>
                         </div>
                       </form>

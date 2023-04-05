@@ -33,7 +33,7 @@ export const signupUser = async (req, res) => {
 
     const authToken = jwt.sign(data, JWT_SECRET);
 
-    console.log("User created successfully...");
+    // console.log("User created successfully...");
     res.status(200).json({ username: user.name, authToken: authToken });
   } catch (error) {
     console.log("Something went wrong", error);
@@ -60,7 +60,9 @@ export const loginUser = async (request, response) => {
       };
 
       const authToken = jwt.sign(data, JWT_SECRET);
-      return response.status(200).json({ successfulLogin: true, authToken: authToken });
+      return response
+        .status(200)
+        .json({ successfulLogin: true, authToken: authToken });
     } else {
       return response
         .status(401)
@@ -79,7 +81,7 @@ export const userDetails = async (req, res) => {
       phone: req.body.phone,
       email: req.body.email,
       bloodgroup: req.body.bloodgroup,
-      user: req.user.id, 
+      user: req.user.id,
     });
     const saved = await details.save();
     return res.status(200).json(saved);
@@ -89,12 +91,12 @@ export const userDetails = async (req, res) => {
 };
 
 // to get user details using middleware
-export const getUserDetails = async(req, res) => {
-   try {
-      const userDetails = await Details.find({user: req.user.id});
-      // console.log("User data", userDetails[0].name);
-      return res.json(userDetails);
-   } catch (error) {
+export const getUserDetails = async (req, res) => {
+  try {
+    const userDetails = await Details.find({ user: req.user.id });
+    // console.log("User data", userDetails[0].name);
+    return res.json(userDetails);
+  } catch (error) {
     res.status(500).send("Internal server error while fetching user details..");
-   }
-}
+  }
+};

@@ -7,6 +7,7 @@ const Home = () => {
   const [loading, setLoading] = useState({
     loadingstate: true,
   });
+
   const [data, setdata] = useState({
     name: "",
     email: "",
@@ -17,6 +18,11 @@ const Home = () => {
   const getDetails = async () => {
     try {
       const response = await getUserDetails();
+      if (response === undefined) {
+        console.log("Cant find user details...");
+        setLoading(false);
+        return;
+      }
       setTimeout(() => {
         setdata({
           name: response.name,
